@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Task2.1</string>
+    <string name="user_hint" />
+    <string name="unit1">Centimetre</string>
+    <string name="unit2">Foot</string>
+    <string name="unit3">Inch</string>
+    <string name="result1" />
+    <string name="result2" />
+    <string name="result3" />
+    <string name="imageView1">image1</string>
+    <string name="imageView2">image2</string>
+    <string name="imageView3">image3</string>
+    <string-array name="units">
+        <item>Metre</item>
+        <item>Celsius</item>
+        <item>Kilograms</item>
+    </string-array>
+</resources>
