@@ -3,12 +3,14 @@ package com.example.task21;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -16,8 +18,17 @@ public class MainActivity extends AppCompatActivity {
 
      TextView display1, display2, display3, unit1, unit2, unit3;
      ImageButton metre, temp, kg;
-     EditText input;
+     EditText userinput;
      Spinner spinner;
+
+     private final String[] userOptions = {"Metre", "Celsius", "Kilogram"};
+
+    private void initSpinner() {
+        spinner = findViewById(R.id.spinner2);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, userOptions);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
 
 
     @Override
@@ -25,108 +36,82 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        input = findViewById(R.id.editTextNumber);
-
+        userinput = findViewById(R.id.editTextNumber);
         display1 = findViewById(R.id.textView2);
         display2 = findViewById(R.id.textView5);
         display3 = findViewById(R.id.textView6);
-
         unit1 = findViewById(R.id.textView3);
         unit2 = findViewById(R.id.textView4);
         unit3 = findViewById(R.id.textView7);
-
         metre = findViewById(R.id.imageButton2);
         temp = findViewById(R.id.imageButton4);
         kg = findViewById(R.id.imageButton6);
-
-        spinner = findViewById(R.id.spinner2);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.units, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
-
-                String selectedUnit = parent.getItemAtPosition(position).toString();
-                if (selectedUnit.equals("Metre")) {
-                    unit1.setText("Centimetre");
-                    unit2.setText("Foot");
-                    unit3.setText("Inch");
-                }
-                else if (selectedUnit.equals("Celsius")){
-                    unit1.setText("Fahrenheit");
-                    unit2.setText("Kelvin");
-                    unit3.setText("");
-                }
-                else if (selectedUnit.equals("Kilograms")){
-                    unit1.setText("Gram");
-                    unit2.setText("Ounce(Oz)");
-                    unit3.setText("Pound(lb)");
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        metre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double num =  Double.parseDouble(input.getText().toString());
-
-                double res1 = num * 100;
-                double res2 = num / 0.3048;
-                double res3 = num / 0.0254;
-                res1 = Math.round(res1 * 100.0)/100.0;
-                res2 = Math.round(res2 * 100.0)/100.0;
-                res3 = Math.round(res3 * 100.0)/100.0;
-                display1.setText(Double.toString(res1));
-                display2.setText(Double.toString(res2));
-                display3.setText(Double.toString(res3));
-            }
-        });
-
-        temp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double num =  Double.parseDouble(input.getText().toString());
-
-                double res1 = num * 1.8 + 32;
-                double res2 = num + 273.15;
-                res1 = Math.round(res1 * 100.0)/100.0;
-                res2 = Math.round(res2 * 100.0)/100.0;
-                display1.setText(Double.toString(res1));
-                display2.setText(Double.toString(res2));
-                display3.setText("");
-
-            }
-        });
-
-        kg.setOnClickListener((new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double num =  Double.parseDouble(input.getText().toString());
-                double res1 = num * 1000;
-                double res2 = num / 0.02834952;
-                double res3 = num / 0.45359237;
-                res1 = Math.round(res1 * 100.0)/100.0;
-                res2 = Math.round(res2 * 100.0)/100.0;
-                res3 = Math.round(res3 * 100.0)/100.0;
-                display1.setText(Double.toString(res1));
-                display2.setText(Double.toString(res2));
-                display3.setText(Double.toString(res3));
-            }
-        }));
-
+        metre.setOnClickListener((View.OnClickListener) this);
+        temp.setOnClickListener((View.OnClickListener) this);
+        kg.setOnClickListener((View.OnClickListener) this);
+        initSpinner();
 
 
     }
+
+    public void onClick(View v) {
+        String select = spinner.getSelectedItem().toString();
+        double input = Integer.parseInt(String.valueOf(userinput.getText()));
+
+        switch (v.getId()) {
+            case R.id.imageButton2: metre(input, select);
+                break;
+            case R.id.imageButton4: temp(input, select);
+                break;
+            case R.id.imageButton6: kg(input, select);
+                break;
+        }
+    }
+
+    public void metre(double num1, String selection) {
+        if (!selection.equals("Metre")){
+            Toast.makeText(this, "Please choose the correct option!", Toast.LENGTH_SHORT).show();
+        }
+
+        else {
+
+            display1.setText(String.format("%.2f", num1*100));
+            display2.setText(String.format("%.2f", num1*3.28));
+            display3.setText(String.format("%.2f", num1*39.37));
+
+        }
+    }
+
+    public void temp(double num2, String selection) {
+        if (!selection.equals("Celsius")){
+            Toast.makeText(this, "Please choose the correct option!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+
+            display1.setText(String.format("%.2f", num2 * 9 / 5 + 32));
+            display2.setText(String.format("%.2f", num2+273.15));
+            display3.setText("");
+
+        }
+    }
+
+    public void kg(double num3, String selection) {
+        if (!selection.equals("Kilogram")){
+            Toast.makeText(this, "Please choose the correct option!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+
+            display1.setText(String.format("%.2f", num3/100));
+            display2.setText(String.format("%.2f", num3*35.27));
+            display3.setText(String.format("%.2f", num3*2.2));
+
+
+        }
+    }
+
+
+
+
 
 
 }
